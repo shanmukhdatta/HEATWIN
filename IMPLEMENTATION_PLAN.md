@@ -3,7 +3,7 @@
 > **Companion to [README.md](README.md)**  
 > **Project:** Heat Exchanger Digital Twin with PID Control  
 > **Approach:** Software-only, physics-first, test-driven, reproducible experiments  
-> **Status:** Milestones 0–2 (foundation, physics/open-loop, empirical identification) are implemented on stacked feature branches; GitHub Actions and PR review determine merge acceptance. PID, predictive twin, faults and full dashboard remain pending.
+> **Status:** Milestones 0–3 (foundation, physics/open-loop, identification, sampled P/PI/PID) implemented on stacked feature branches with scientific tests and reproducible experiments. GitHub CI and PR review determine acceptance; predictive twin, advanced faults and full dashboard remain pending.
 
 ## 0. Definition of done
 
@@ -216,18 +216,20 @@ HEATWIN/
 
 **Primary files:** `control/pid.py`, `control/tuning.py`, `tests/test_pid.py`.
 
-- [ ] Implement P and PI with explicit sample period and a configurable bias `u_bias`.
-- [ ] Add PID with derivative on measurement and derivative filtering.
-- [ ] Add valve output saturation and anti-windup (clamping or back-calculation).
-- [ ] Implement bumpless initialization at an operating point.
-- [ ] Implement manual tuning plus justified Ziegler–Nichols and IMC-style methods.
-- [ ] Record error, individual controller terms, output command, actual valve position.
-- [ ] Compare PI and PID for a feasible 55 → 57 °C setpoint change.
-- [ ] Record the tuning formula, model form, and the controller parameter convention.
+- [x] Implement P and PI with explicit sample period and a configurable bias `u_bias`.
+- [x] Add PID with derivative on measurement and derivative filtering.
+- [x] Add valve output saturation and anti-windup (clamping or back-calculation).
+- [x] Implement bumpless initialization at an operating point.
+- [x] Implement manual tuning plus justified Ziegler–Nichols and IMC-style methods.
+- [x] Record error, individual controller terms, output command, actual valve position.
+- [x] Compare PI and PID for a feasible 55 → 57 °C setpoint change.
+- [x] Record the tuning formula, model form, and the controller parameter convention.
 
 **Tests:** correct error sign, zero error at equilibrium with bias, saturation limits, windup recovery, stable behavior for documented safe gains.
 
 **Acceptance:** baseline PI tracks 57 °C after the step and recovers from a cold-inlet disturbance without sustained oscillation. Do not claim PID is inherently better; compare measured results.
+
+**Phase 4 control acceptance:** local nonlinear sampled-control experiments and scientific tests pass; PI regulates near 55°C and tracks 57°C, with observed disturbance rejection and documented infeasible hot-inlet cases. See `docs/pid_controller_design.md` and reproducible `scripts/phase4_control_experiments.py`. Phase 4 does not implement the independent predictive twin or future advanced sensor/fault scenarios.
 
 ### Milestone 4 — Simulation scenarios and metrics (Days 12–13)
 

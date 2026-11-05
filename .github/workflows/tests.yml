@@ -90,3 +90,23 @@ jobs:
           path: ${{ runner.temp }}/heatwin-phase3/
           if-no-files-found: error
           retention-days: 30
+
+      - name: Run Phase 4 sampled-control experiments
+        run: python scripts/phase4_control_experiments.py --output-dir "${{ runner.temp }}/heatwin-phase4"
+
+      - name: Verify Phase 4 scientific artifacts
+        shell: bash
+        run: |
+          test -s "${{ runner.temp }}/heatwin-phase4/controller_comparison.csv"
+          test -s "${{ runner.temp }}/heatwin-phase4/robustness.csv"
+          test -s "${{ runner.temp }}/heatwin-phase4/summary.json"
+          test -s "${{ runner.temp }}/heatwin-phase4/selected_controller.json"
+          test "$(find "${{ runner.temp }}/heatwin-phase4" -name 'figure_*.png' | wc -l)" -eq 8
+
+      - name: Upload Phase 4 reproducible experiment artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: heatwin-phase4-python-${{ matrix.python-version }}
+          path: ${{ runner.temp }}/heatwin-phase4/
+          if-no-files-found: error
+          retention-days: 30

@@ -9,9 +9,9 @@ st.set_page_config(page_title="HEATWIN", page_icon="🌡️", layout="centered")
 st.title("HEATWIN — Heat Exchanger Digital Twin")
 st.caption(f"Project foundation · version {__version__}")
 st.info(
-    "Phases 1–2 provide a validated Python heat-exchanger model and open-loop simulator. "
-    "The full dashboard, PID controller and independent digital twin "
-    "have not been implemented yet."
+    "Phases 1–4 provide tested physics, open-loop identification, and sampled P/PI/PID "
+    "temperature-control modules. The full interactive dashboard and independent "
+    "predictive digital twin have not been implemented yet."
 )
 
 try:
@@ -26,4 +26,4 @@ else:
         f"Hot inlet: {settings.th_in:g} °C · "
         f"Sample interval: {settings.sample_time:g} s"
     )
-    st.caption("Run scripts/phase2_experiments.py for open-loop physics plots and CSV output.")
+    st.caption("Run scripts/phase4_control_experiments.py to generate closed-loop plots and CSV output.")

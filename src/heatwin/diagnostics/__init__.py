@@ -1,1 +1,1 @@
-"""Diagnostics package — implementation planned for later phases."""
+"""Control-performance metrics (advanced fault diagnostics are future work)."""
