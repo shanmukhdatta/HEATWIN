@@ -3,7 +3,7 @@
 > **Companion to [README.md](README.md)**  
 > **Project:** Heat Exchanger Digital Twin with PID Control  
 > **Approach:** Software-only, physics-first, test-driven, reproducible experiments  
-> **Status:** Milestone 0 foundation code is implemented on `phase-1/project-foundation`; CI and review determine acceptance. Physics, control, identification, twin, faults and final dashboard remain pending.
+> **Status:** Milestone 0 foundation is verified on `phase-1/project-foundation`; Milestone 1 physics/open-loop simulation has been implemented and numerically validated on `phase-2/mathematical-model` (CI/review determine merge acceptance). Identification, control, independent twin, faults and full dashboard remain pending.
 
 ## 0. Definition of done
 
@@ -180,18 +180,20 @@ HEATWIN/
 
 **Primary files:** `models/plant.py`, `models/actuator.py`, `config.py`, `tests/test_plant.py`.
 
-- [ ] Create a typed `PlantParameters` configuration model.
-- [ ] Implement `rhs(t, y, inputs, params)` returning temperature and actuator derivatives.
-- [ ] Add `steady_state(...)` for the nominal flow and temperatures.
-- [ ] Integrate for one sample or an arbitrary open-loop interval using SciPy.
-- [ ] Support fixed valve commands, inlet temperatures and cold-side flow.
-- [ ] Validate parameter signs and valve bounds.
-- [ ] Draw a 0–300 s nominal step response.
-- [ ] Save timeseries to a DataFrame / CSV.
+- [x] Create a typed `PlantParameters` configuration model.
+- [x] Implement `rhs(t, y, inputs, params)` returning temperature and actuator derivatives.
+- [x] Add `steady_state(...)` for the nominal flow and temperatures.
+- [x] Integrate for one sample or an arbitrary open-loop interval using SciPy.
+- [x] Support fixed valve commands, inlet temperatures and cold-side flow.
+- [x] Validate parameter signs and valve bounds.
+- [x] Draw a 0–300 s nominal step response.
+- [x] Save timeseries to a DataFrame / CSV.
 
 **Tests:** mass/energy consistency, steady-state derivatives near zero, correct valve limits, finite states, reproducibility.
 
 **Acceptance:** 55 °C nominal equilibrium is reproduced; increased hot-water flow initially drives the cold outlet in the expected direction; energy balance identity passes.
+
+**Phase 2 numerical evidence:** exact nominal hot flow `0.046749777382 kg/s`, opening `0.408330859800`, heat duty `3135 W`; the unrounded inverse/forward steady states have near-zero ODE residuals. The Phase 2 test suite includes energy cancellation, valve bounds, disturbance direction, solver-step alignment, deterministic replay and convergence. Run `python scripts/phase2_experiments.py --output-dir outputs/phase2` to regenerate actual plots and time series.
 
 ### Milestone 2 — Experimental data and empirical models (Days 5–7)
 

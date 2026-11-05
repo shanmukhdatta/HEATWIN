@@ -6,7 +6,7 @@
 **Repository:** https://github.com/shanmukhdatta/HEATWIN  
 **Course:** Process Dynamics and Control (ICDC0307)  
 **Context:** Undergraduate Chemical Engineering project, NIT Jalandhar  
-**Status:** Phase 1 project foundation implemented in the feature branch; physics simulation, PID, and digital twin remain future work
+**Status:** Phases 1–2 implemented on feature branches: validated project foundation and open-loop two-lump physical simulator. PID, system identification, predictive twin and full dashboard remain future work.
 
 > **Important:** This README describes the **target system**, not currently implemented features. HEATWIN is a **simulation-based digital twin prototype**, not a validated industrial plant twin.
 
@@ -140,7 +140,11 @@ Here `K` is gain, `tau` is response time constant and `theta` is effective dead 
 
 The control error is `e = T_setpoint - T_measured`. The target controller includes proportional action, integral action, optional filtered derivative on measurement, output limiting, and anti-windup. **PI is the baseline**; PID is added for comparison after PI has been validated. All tuning parameters must state their units and sampling period.
 
-## 6. Expected features (roadmap, not yet implemented)
+## 6. Implemented functions and future roadmap
+
+**Implemented and verified in Phase 2:** physically derived two-temperature and first-order valve state equations; analytical forward/inverse equilibria; event-exact open-loop ODE integration; hot-flow and inlet-temperature steps; deterministic CSV and five-panel PNG plots; scientific tests and convergence checks. See [mathematical model](docs/mathematical_model.md) and [validation notebook](notebooks/01_physics_validation.ipynb).
+
+**Still planned for subsequent phases:**
 
 - Interactive Streamlit dashboard: setpoint, P/PI/PID selection, gains, valve position, temperatures, heat duty, alarms.
 - Virtual process simulation: deterministic seeded runs, user-specified disturbances, selectable initial conditions.
@@ -163,7 +167,7 @@ The control error is `e = T_setpoint - T_measured`. The target controller includ
 | PyYAML | Parameter / scenario configurations |
 | pytest | Automated physics, controller and integration tests |
 
-### Installation and verification (Phase 1 foundation)
+### Installation and verification (Phases 1–2)
 
 ```bash
 git clone https://github.com/shanmukhdatta/HEATWIN.git
@@ -177,12 +181,15 @@ python -m pip install -r requirements-dev.txt
 python -m pip check
 python -m pytest -q
 python -m ruff check .
+python scripts/phase2_experiments.py --output-dir outputs/phase2
 python -m streamlit run app.py
 ```
 
-> **Phase 1 only:** The commands install the editable package and development tools, run configuration/import tests and lint checks, and launch a placeholder dashboard. They do **not** simulate a heat exchanger or execute a controller. For runtime dependencies without test tools, run `python -m pip install -r requirements.txt`. Use Python 3.11 or 3.13. The baseline YAML is resolved relative to the repository checkout, so use the editable installation from this repository.
+> **Phases 1–2:** The commands install the package, run real configuration and physics tests, generate open-loop heat-exchanger CSV files/PNG plots in `outputs/phase2/`, and launch the existing information-only Streamlit placeholder. No PID, system identification, predictive twin or full dashboard is implemented. For runtime dependencies without test tools, use `python -m pip install -r requirements.txt`. Python 3.11 and 3.13 are tested in CI. The default YAML resolves relative to the source checkout.
 
 **Phase 1 implemented files:** `pyproject.toml` and `requirements*.txt` define bounded dependencies; `src/heatwin/config.py` and `configs/default.yaml` define validated configuration; `tests/test_imports.py` and `tests/test_config.py` cover package/configuration behavior; `.github/workflows/tests.yml` checks Python 3.11 and 3.13. The model, controller, identification, simulation, diagnostic and visualization subpackages contain only `__init__.py` scaffolding. `configs/scenarios.yaml` is reserved for later development.
+
+**Phase 2 implemented files:** `src/heatwin/models/plant.py`, `models/actuator.py`, `simulation/open_loop.py`, `visualization/charts.py`, `scripts/phase2_experiments.py`, `tests/test_{plant,actuator,steady_state,open_loop}.py`, `docs/mathematical_model.md`, and `notebooks/01_physics_validation.ipynb`. The future solver and control modules shown in the target tree below are *not* implemented yet.
 
 ## 8. Proposed repository layout
 
@@ -257,7 +264,7 @@ Use one feature branch and pull request per task. A PR should explain what chang
 
 See **[IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md)** for the ordered milestones, file-by-file work, responsibility suggestions, numerical checks, test matrix, and final demo plan.
 
-**Next task (Phase 2):** use the tested `PlantParameters` dataclass and `load_config()` in `src/heatwin/config.py` to implement `src/heatwin/models/plant.py`, compute nominal equilibrium, and add physics tests. No model, controller or digital twin functionality exists in Phase 1.
+**Phase 2 implemented:** `PlantParameters` and `load_config()` now feed the verified three-state plant, actuator and piecewise-input open-loop simulation. **Next task (Phase 3):** consume generated open-loop valve-step CSV time series to fit and validate independent FOPDT/second-order empirical transfer functions; no identification or PID has yet been implemented.
 
 ## 13. References
 
