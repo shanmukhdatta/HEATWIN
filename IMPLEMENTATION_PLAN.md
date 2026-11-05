@@ -3,7 +3,7 @@
 > **Companion to [README.md](README.md)**  
 > **Project:** Heat Exchanger Digital Twin with PID Control  
 > **Approach:** Software-only, physics-first, test-driven, reproducible experiments  
-> **Status:** All milestones below are initially pending.
+> **Status:** Milestone 0 foundation code is implemented on `phase-1/project-foundation`; CI and review determine acceptance. Physics, control, identification, twin, faults and final dashboard remain pending.
 
 ## 0. Definition of done
 
@@ -165,14 +165,16 @@ HEATWIN/
 
 ### Milestone 0 — Project setup (Day 1)
 
-- [ ] Add `.gitignore`, `pyproject.toml`, `requirements.txt`, package `__init__.py`.
+- [x] Add `.gitignore`, `pyproject.toml`, `requirements.txt`, package `__init__.py`.
 - [ ] Create a fresh Python virtual environment.
-- [ ] Add `pytest`, formatting/linting conventions, and minimal GitHub Actions workflow.
-- [ ] Add `configs/default.yaml` and validate required configuration fields.
-- [ ] Write a single command for running the tests.
-- [ ] Verify installation on a second machine or clean environment.
+- [x] Add `pytest`, formatting/linting conventions, and minimal GitHub Actions workflow.
+- [x] Add `configs/default.yaml` and validate required configuration fields.
+- [x] Write a single command for running the tests.
+- [x] Verify installation on a second machine or clean environment.
 
 **Acceptance:** environment installs successfully and `pytest -q` discovers a passing smoke test.
+
+**Phase 1 verification:** GitHub Actions passed full installation, `pip check`, 72 tests, Ruff, and Streamlit placeholder smoke checks on Python 3.11 and 3.13. A fresh contributor-created local virtual environment is still a documented setup step rather than a separately verified manual run. Physical modeling and control implementation remain pending.
 
 ### Milestone 1 — Physics-based virtual plant (Days 2–4)
 

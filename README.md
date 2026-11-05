@@ -6,7 +6,7 @@
 **Repository:** https://github.com/shanmukhdatta/HEATWIN  
 **Course:** Process Dynamics and Control (ICDC0307)  
 **Context:** Undergraduate Chemical Engineering project, NIT Jalandhar  
-**Status:** 🧭 Planning / implementation not yet started
+**Status:** Phase 1 project foundation implemented in the feature branch; physics simulation, PID, and digital twin remain future work
 
 > **Important:** This README describes the **target system**, not currently implemented features. HEATWIN is a **simulation-based digital twin prototype**, not a validated industrial plant twin.
 
@@ -163,7 +163,7 @@ The control error is `e = T_setpoint - T_measured`. The target controller includ
 | PyYAML | Parameter / scenario configurations |
 | pytest | Automated physics, controller and integration tests |
 
-### Planned installation (after source files are added)
+### Installation and verification (Phase 1 foundation)
 
 ```bash
 git clone https://github.com/shanmukhdatta/HEATWIN.git
@@ -173,12 +173,16 @@ python -m venv .venv
 source .venv/bin/activate
 # Windows PowerShell: .venv\Scripts\Activate.ps1
 
-pip install -r requirements.txt
-pytest -q
-streamlit run app.py
+python -m pip install -r requirements-dev.txt
+python -m pip check
+python -m pytest -q
+python -m ruff check .
+python -m streamlit run app.py
 ```
 
-> **Not runnable yet:** These commands become applicable after `requirements.txt`, `src/`, `tests/`, and `app.py` are implemented. This repository initially contains project documentation only.
+> **Phase 1 only:** The commands install the editable package and development tools, run configuration/import tests and lint checks, and launch a placeholder dashboard. They do **not** simulate a heat exchanger or execute a controller. For runtime dependencies without test tools, run `python -m pip install -r requirements.txt`. Use Python 3.11 or 3.13. The baseline YAML is resolved relative to the repository checkout, so use the editable installation from this repository.
+
+**Phase 1 implemented files:** `pyproject.toml` and `requirements*.txt` define bounded dependencies; `src/heatwin/config.py` and `configs/default.yaml` define validated configuration; `tests/test_imports.py` and `tests/test_config.py` cover package/configuration behavior; `.github/workflows/tests.yml` checks Python 3.11 and 3.13. The model, controller, identification, simulation, diagnostic and visualization subpackages contain only `__init__.py` scaffolding. `configs/scenarios.yaml` is reserved for later development.
 
 ## 8. Proposed repository layout
 
@@ -253,7 +257,7 @@ Use one feature branch and pull request per task. A PR should explain what chang
 
 See **[IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md)** for the ordered milestones, file-by-file work, responsibility suggestions, numerical checks, test matrix, and final demo plan.
 
-**Initial recommended task:** implement `src/heatwin/models/plant.py`, compute the nominal equilibrium, and write `tests/test_plant.py` before building any dashboard components.
+**Next task (Phase 2):** use the tested `PlantParameters` dataclass and `load_config()` in `src/heatwin/config.py` to implement `src/heatwin/models/plant.py`, compute nominal equilibrium, and add physics tests. No model, controller or digital twin functionality exists in Phase 1.
 
 ## 13. References
 
