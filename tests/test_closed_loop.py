@@ -1,12 +1,11 @@
 """PID-10--15 and event timing/plant coupling integration tests."""
 
 from dataclasses import replace
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
 import pytest
-
-from pathlib import Path
 
 from heatwin.config import load_config
 from heatwin.control.tuning import imc_pi, load_identified_model

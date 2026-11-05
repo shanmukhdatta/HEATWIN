@@ -153,7 +153,7 @@ def simulate_closed_loop(
         if i + 1 == len(times):
             break
         nxt = float(times[i + 1])
-        solution = solve_ivp(lambda t, y: rhs(t, y, inputs, params), (float(time), nxt),
+        solution = solve_ivp(lambda t, y, interval_inputs=inputs: rhs(t, y, interval_inputs, params), (float(time), nxt),
                              state, method="RK45", rtol=rtol, atol=atol)
         if not solution.success or not np.isfinite(solution.y).all():
             raise ClosedLoopError(f"Closed-loop integration failed at {time:g} seconds")
