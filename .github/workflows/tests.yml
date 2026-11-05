@@ -1,0 +1,73 @@
+name: HEATWIN Python checks
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.13"]
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: |
+            pyproject.toml
+            requirements.txt
+            requirements-dev.txt
+      - name: Install package and development tools
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements-dev.txt
+          python -m pip check
+      - name: Run unit tests
+        run: python -m pytest -q
+      - name: Run Ruff
+        run: python -m ruff check .
+
+      - name: Smoke-test Streamlit placeholder
+        run: |
+          python - <<'PY'
+          from streamlit.testing.v1 import AppTest
+
+          app = AppTest.from_file("app.py").run(timeout=20)
+          assert not app.exception, [str(exc.message) for exc in app.exception]
+          assert any("HEATWIN" in item.value for item in app.title)
+          assert any("55" in str(item.value) for item in app.metric)
+          PY
+
+      - name: Verify Streamlit HTTP server startup
+        shell: bash
+        run: |
+          python -m streamlit run app.py --server.headless=true --server.port=8501 --server.address=127.0.0.1 > /tmp/heatwin-streamlit.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+          for i in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:8501/_stcore/health > /dev/null; then
+              echo "Streamlit HTTP server is healthy."
+              exit 0
+            fi
+            if ! kill -0 "$server_pid" 2>/dev/null; then
+              echo "Streamlit server exited unexpectedly."
+              cat /tmp/heatwin-streamlit.log
+              exit 1
+            fi
+            sleep 1
+          done
+          cat /tmp/heatwin-streamlit.log
+          echo "Streamlit HTTP health check timed out."
+          exit 1
+
+      - name: Run Phase 2 reproducible experiments
+        run: python scripts/phase2_experiments.py --output-dir "${{ runner.temp }}/heatwin-phase2"

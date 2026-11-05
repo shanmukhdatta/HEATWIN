@@ -3,7 +3,7 @@
 > **Companion to [README.md](README.md)**  
 > **Project:** Heat Exchanger Digital Twin with PID Control  
 > **Approach:** Software-only, physics-first, test-driven, reproducible experiments  
-> **Status:** All milestones below are initially pending.
+> **Status:** Milestone 0 foundation is verified on `phase-1/project-foundation`; Milestone 1 physics/open-loop simulation has been implemented and numerically validated on `phase-2/mathematical-model` (CI/review determine merge acceptance). Identification, control, independent twin, faults and full dashboard remain pending.
 
 ## 0. Definition of done
 
@@ -165,31 +165,35 @@ HEATWIN/
 
 ### Milestone 0 — Project setup (Day 1)
 
-- [ ] Add `.gitignore`, `pyproject.toml`, `requirements.txt`, package `__init__.py`.
+- [x] Add `.gitignore`, `pyproject.toml`, `requirements.txt`, package `__init__.py`.
 - [ ] Create a fresh Python virtual environment.
-- [ ] Add `pytest`, formatting/linting conventions, and minimal GitHub Actions workflow.
-- [ ] Add `configs/default.yaml` and validate required configuration fields.
-- [ ] Write a single command for running the tests.
-- [ ] Verify installation on a second machine or clean environment.
+- [x] Add `pytest`, formatting/linting conventions, and minimal GitHub Actions workflow.
+- [x] Add `configs/default.yaml` and validate required configuration fields.
+- [x] Write a single command for running the tests.
+- [x] Verify installation on a second machine or clean environment.
 
 **Acceptance:** environment installs successfully and `pytest -q` discovers a passing smoke test.
+
+**Phase 1 verification:** GitHub Actions passed full installation, `pip check`, 72 tests, Ruff, and Streamlit placeholder smoke checks on Python 3.11 and 3.13. A fresh contributor-created local virtual environment is still a documented setup step rather than a separately verified manual run. Physical modeling and control implementation remain pending.
 
 ### Milestone 1 — Physics-based virtual plant (Days 2–4)
 
 **Primary files:** `models/plant.py`, `models/actuator.py`, `config.py`, `tests/test_plant.py`.
 
-- [ ] Create a typed `PlantParameters` configuration model.
-- [ ] Implement `rhs(t, y, inputs, params)` returning temperature and actuator derivatives.
-- [ ] Add `steady_state(...)` for the nominal flow and temperatures.
-- [ ] Integrate for one sample or an arbitrary open-loop interval using SciPy.
-- [ ] Support fixed valve commands, inlet temperatures and cold-side flow.
-- [ ] Validate parameter signs and valve bounds.
-- [ ] Draw a 0–300 s nominal step response.
-- [ ] Save timeseries to a DataFrame / CSV.
+- [x] Create a typed `PlantParameters` configuration model.
+- [x] Implement `rhs(t, y, inputs, params)` returning temperature and actuator derivatives.
+- [x] Add `steady_state(...)` for the nominal flow and temperatures.
+- [x] Integrate for one sample or an arbitrary open-loop interval using SciPy.
+- [x] Support fixed valve commands, inlet temperatures and cold-side flow.
+- [x] Validate parameter signs and valve bounds.
+- [x] Draw a 0–300 s nominal step response.
+- [x] Save timeseries to a DataFrame / CSV.
 
 **Tests:** mass/energy consistency, steady-state derivatives near zero, correct valve limits, finite states, reproducibility.
 
 **Acceptance:** 55 °C nominal equilibrium is reproduced; increased hot-water flow initially drives the cold outlet in the expected direction; energy balance identity passes.
+
+**Phase 2 numerical evidence:** exact nominal hot flow `0.046749777382 kg/s`, opening `0.408330859800`, heat duty `3135 W`; the unrounded inverse/forward steady states have near-zero ODE residuals. The Phase 2 test suite includes energy cancellation, valve bounds, disturbance direction, solver-step alignment, deterministic replay and convergence. Run `python scripts/phase2_experiments.py --output-dir outputs/phase2` to regenerate actual plots and time series.
 
 ### Milestone 2 — Experimental data and empirical models (Days 5–7)
 

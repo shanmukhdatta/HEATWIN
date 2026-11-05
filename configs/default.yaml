@@ -1,0 +1,15 @@
+# Illustrative water-to-water heat exchanger parameters (not plant measurements).
+rho: 1000.0        # density, kg/m^3
+cp: 4180.0         # specific heat capacity, J/(kg K)
+vc: 0.001          # cold-side fluid hold-up, m^3
+vh: 0.001          # hot-side fluid hold-up, m^3
+ua: 350.0          # overall thermal conductance, W/K
+tc_in: 30.0        # cold-side inlet temperature, deg C
+th_in: 80.0        # hot-side inlet temperature, deg C
+mc: 0.030          # cold-side mass flow, kg/s
+mh_min: 0.010      # minimum hot-side mass flow, kg/s
+mh_max: 0.100      # maximum hot-side mass flow, kg/s
+valve_tau: 4.0     # valve time constant, s
+sample_time: 1.0   # controller sampling interval, s
+setpoint: 55.0     # desired cold-side outlet temperature, deg C
+seed: 42           # nonnegative integer for future reproducible simulations
