@@ -4,8 +4,6 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from matplotlib.figure import Figure
 
-
-
 _REQUIRED_COLUMNS = {
     "time_s", "tc_c", "th_c", "u", "xv", "mh_kg_s", "q_w",
 }
