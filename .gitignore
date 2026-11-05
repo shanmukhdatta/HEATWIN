@@ -1,0 +1,43 @@
+# Python bytecode and caches
+__pycache__/
+*.py[cod]
+*.pyo
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Environments and local secrets
+.venv/
+venv/
+env/
+.env
+.env.*
+!.env.example
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Tests and coverage
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+.tox/
+.nox/
+
+# Notebook and IDE state
+.ipynb_checkpoints/
+.vscode/
+.idea/
+.DS_Store
+
+# Simulation artifacts (retain tracked directory markers)
+data/synthetic/*
+!data/synthetic/.gitkeep
+outputs/
+results/
+*.tmp
+*.log

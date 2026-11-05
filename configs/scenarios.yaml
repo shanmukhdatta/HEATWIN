@@ -1,0 +1,3 @@
+# Phase 4 will define reproducible simulation scenarios here.
+# No scenario engine is implemented in Phase 1.
+scenarios: {}

@@ -3,7 +3,7 @@
 > **Companion to [README.md](README.md)**  
 > **Project:** Heat Exchanger Digital Twin with PID Control  
 > **Approach:** Software-only, physics-first, test-driven, reproducible experiments  
-> **Status:** All milestones below are initially pending.
+> **Status:** Milestone 0 foundation code is implemented on `phase-1/project-foundation`; CI and review determine acceptance. Physics, control, identification, twin, faults and final dashboard remain pending.
 
 ## 0. Definition of done
 
