@@ -46,3 +46,25 @@ jobs:
           assert any("HEATWIN" in item.value for item in app.title)
           assert any("55" in str(item.value) for item in app.metric)
           PY
+
+      - name: Verify Streamlit HTTP server startup
+        shell: bash
+        run: |
+          python -m streamlit run app.py --server.headless=true --server.port=8501 --server.address=127.0.0.1 > /tmp/heatwin-streamlit.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+          for i in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:8501/_stcore/health > /dev/null; then
+              echo "Streamlit HTTP server is healthy."
+              exit 0
+            fi
+            if ! kill -0 "$server_pid" 2>/dev/null; then
+              echo "Streamlit server exited unexpectedly."
+              cat /tmp/heatwin-streamlit.log
+              exit 1
+            fi
+            sleep 1
+          done
+          cat /tmp/heatwin-streamlit.log
+          echo "Streamlit HTTP health check timed out."
+          exit 1
