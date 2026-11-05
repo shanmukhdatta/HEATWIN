@@ -35,3 +35,14 @@ jobs:
         run: python -m pytest -q
       - name: Run Ruff
         run: python -m ruff check .
+
+      - name: Smoke-test Streamlit placeholder
+        run: |
+          python - <<'PY'
+          from streamlit.testing.v1 import AppTest
+
+          app = AppTest.from_file("app.py").run(timeout=20)
+          assert not app.exception, [str(exc.message) for exc in app.exception]
+          assert any("HEATWIN" in item.value for item in app.title)
+          assert any("55" in str(item.value) for item in app.metric)
+          PY
