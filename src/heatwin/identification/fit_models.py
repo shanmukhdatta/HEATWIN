@@ -89,6 +89,35 @@ def _single_step_data(data: pd.DataFrame, step_time_s: float):
     return t, y, after, baseline_c, delta_u, dy
 
 
+def _reaction_curve_initial_guess(t, y, step_time_s, baseline_c, dy):
+    """Estimate FOPDT tau/theta from 28.3% and 63.2% reaction-curve crossings.
+
+    For an ideal FOPDT: t_28.3=theta+tau/3 and t_63.2=theta+tau.
+    Returns None when crossings are unavailable or numerically degenerate.
+    """
+    samples = t[t >= step_time_s]
+    deviation = np.sign(dy) * (y[t >= step_time_s] - baseline_c)
+    crossings = []
+    for fraction in (-np.expm1(-1 / 3), -np.expm1(-1.0)):
+        indices = np.flatnonzero(deviation >= fraction * abs(dy))
+        if not len(indices) or indices[0] == 0:
+            return None
+        j = indices[0]
+        if deviation[j] == deviation[j - 1]:
+            return None
+        crossing = samples[j - 1] + (
+            (fraction * abs(dy) - deviation[j - 1])
+            * (samples[j] - samples[j - 1])
+            / (deviation[j] - deviation[j - 1])
+        )
+        crossings.append(float(crossing - step_time_s))
+    tau = 1.5 * (crossings[1] - crossings[0])
+    theta = crossings[1] - tau
+    if not np.isfinite([tau, theta]).all() or tau <= 0:
+        return None
+    return tau, max(0.0, theta)
+
+
 def fit_step_response(data: pd.DataFrame, *, model: ModelKind,
                       step_time_s: float, max_nfev: int = 2000) -> FitResult:
     """Fit K/tau[/theta] on post-event data only, then check solver success.
@@ -117,7 +146,10 @@ def fit_step_response(data: pd.DataFrame, *, model: ModelKind,
         x0 = [gain_guess, mid_time]
         lower, upper = [-gain_limit, min_tau], [gain_limit, max_tau]
     elif model == "fopdt":
-        x0 = [gain_guess, mid_time, min(elapsed * 0.02, theta_max / 2)]
+        initial = _reaction_curve_initial_guess(t, y, step_time_s, y0, dy)
+        guess_tau, guess_theta = (mid_time, elapsed * 0.02) if initial is None else initial
+        x0 = [gain_guess, min(max_tau * 0.99, max(min_tau * 1.01, guess_tau)),
+              min(theta_max * 0.99, max(0.0, guess_theta))]
         lower, upper = [-gain_limit, min_tau, 0.0], [gain_limit, max_tau, theta_max]
     else:
         x0 = [gain_guess, mid_time / 4, mid_time * 1.25]
