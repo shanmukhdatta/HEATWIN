@@ -4,7 +4,8 @@ import pytest
 
 from heatwin.config import load_config
 from heatwin.identification.linearization import (
-    finite_difference_jacobians, linearize_at_valve,
+    finite_difference_jacobians,
+    linearize_at_valve,
 )
 from heatwin.models.plant import steady_state_for_valve
 from heatwin.simulation.open_loop import InputStep, simulate_open_loop

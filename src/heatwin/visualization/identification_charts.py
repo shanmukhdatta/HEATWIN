@@ -52,7 +52,8 @@ def make_figures(training: pd.DataFrame, predictions: dict[str, np.ndarray],
         ax.plot(t, predictions[name], "--", label=label)
         ax.set(title=f"Figure {n} — {label} fit", xlabel="Time (s)",
                ylabel="Cold outlet temperature (°C)")
-        ax.legend(); ax.grid(alpha=.25)
+        ax.legend()
+        ax.grid(alpha=.25)
         save(fig, f"figure_{n}_{name}.png")
 
     fig, ax = plt.subplots(figsize=(11, 5), constrained_layout=True)
@@ -61,7 +62,8 @@ def make_figures(training: pd.DataFrame, predictions: dict[str, np.ndarray],
         ax.plot(t, y, label=name)
     ax.set(title="Figure 5 — Full valve-to-cold-outlet model comparison",
            xlabel="Time (s)", ylabel="Cold outlet temperature (°C)")
-    ax.grid(alpha=.25);ax.legend()
+    ax.grid(alpha=.25)
+    ax.legend()
     save(fig, "figure_5_model_comparison.png")
 
     fig, ax = plt.subplots(figsize=(11, 5), constrained_layout=True)
@@ -70,7 +72,8 @@ def make_figures(training: pd.DataFrame, predictions: dict[str, np.ndarray],
     ax.axhline(0, color="black", linewidth=.8)
     ax.set(title="Figure 6 — Prediction residuals (reference − model)",
            xlabel="Time (s)", ylabel="Cold outlet residual (°C)")
-    ax.grid(alpha=.25);ax.legend()
+    ax.grid(alpha=.25)
+    ax.legend()
     save(fig, "figure_6_residuals.png")
 
     fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 7), sharex=True,
@@ -80,13 +83,15 @@ def make_figures(training: pd.DataFrame, predictions: dict[str, np.ndarray],
     ax1.plot(operating_points.u0, operating_points.gain_local, "s--",
              label="Analytical local derivative")
     ax1.set_ylabel("Process gain (°C / valve fraction)")
-    ax1.grid(alpha=.25);ax1.legend()
+    ax1.grid(alpha=.25)
+    ax1.legend()
     ax2.plot(operating_points.u0, operating_points.fopdt_tau_s, "o-",
              label="FOPDT lag τ")
     ax2.plot(operating_points.u0, operating_points.fopdt_theta_s, "s--",
              label="Effective delay θ")
     ax2.set(xlabel="Initial valve fraction u₀", ylabel="Time (s)")
-    ax2.grid(alpha=.25);ax2.legend()
+    ax2.grid(alpha=.25)
+    ax2.legend()
     fig.suptitle("Figure 7 — Operating-point dependence (+0.05 valve step)")
     save(fig, "figure_7_operating_point_dependence.png")
     return files

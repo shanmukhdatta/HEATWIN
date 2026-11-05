@@ -1,6 +1,7 @@
 """Unit-safe prediction error metrics; never silently divide by zero."""
 
 from dataclasses import dataclass
+
 import numpy as np
 
 

@@ -6,8 +6,8 @@ No validation or test samples are ever passed to the optimizers.
 """
 
 import argparse
-from dataclasses import asdict
 import json
+from dataclasses import asdict
 from pathlib import Path
 
 import matplotlib
