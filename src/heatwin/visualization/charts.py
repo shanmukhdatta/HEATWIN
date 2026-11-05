@@ -1,8 +1,9 @@
 """Scientific Matplotlib plots using the simulated open-loop trajectory only."""
 
 import matplotlib.pyplot as plt
-import pandas as pd
 from matplotlib.figure import Figure
+
+import pandas as pd
 
 
 _REQUIRED_COLUMNS = {

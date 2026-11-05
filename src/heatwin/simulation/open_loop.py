@@ -156,7 +156,7 @@ def simulate_open_loop(
     # For every solver interval the operating inputs remain constant.
     for start, stop in zip(boundaries[:-1], boundaries[1:], strict=True):
         solution = solve_ivp(
-            lambda t, y: rhs(t, y, conditions, params),
+            lambda t, y, interval_inputs=conditions: rhs(t, y, interval_inputs, params),
             (start, stop),
             current_state,
             method=method,
