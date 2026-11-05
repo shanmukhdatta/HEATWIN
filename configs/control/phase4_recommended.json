@@ -1,0 +1,45 @@
+{
+  "selected_controller": "PI-IMC",
+  "source_identification": "configs/identified/phase3_fopdt_nominal.json",
+  "controller_settings": {
+    "mode": "PI",
+    "kc": 0.055632090215840556,
+    "sample_time_s": 1.0,
+    "ti_s": 25.86242695807043,
+    "td_s": 0.0,
+    "filter_tau_s": 1.0,
+    "bias": 0.4,
+    "lower": 0.0,
+    "upper": 1.0,
+    "anti_windup": "conditional"
+  },
+  "operating_point": {
+    "tc": 55.0,
+    "th": 63.957142857142856,
+    "xv": 0.40833085980013833,
+    "u": 0.40833085980013833,
+    "mh": 0.046749777382012456,
+    "q": 3135.0
+  },
+  "validation_experiment": "positive_setpoint__PI-IMC",
+  "metrics": {
+    "experiment": "positive_setpoint",
+    "controller": "PI-IMC",
+    "kc": 0.055632090215840556,
+    "ti_s": 25.86242695807043,
+    "td_s": 0.0,
+    "final_tc_c": 56.9998908259961,
+    "iae_c_s": 71.47786892984163,
+    "ise_c2_s": 86.0426578728415,
+    "itae_c_s2": 2154.758244105214,
+    "overshoot_c": 0.0,
+    "undershoot_c": 2.0,
+    "rise_time_s": 59.778857371717066,
+    "settling_time_s": 92.0,
+    "observed_final_error_c": 0.00010917400390297871,
+    "max_command": 0.5642423444482492,
+    "total_command_movement": 0.045369657957296416,
+    "total_valve_movement": 0.15619735242302452,
+    "saturation_duration_s": 0.0
+  }
+}

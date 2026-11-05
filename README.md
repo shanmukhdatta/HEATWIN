@@ -6,7 +6,7 @@
 **Repository:** https://github.com/shanmukhdatta/HEATWIN  
 **Course:** Process Dynamics and Control (ICDC0307)  
 **Context:** Undergraduate Chemical Engineering project, NIT Jalandhar  
-**Status:** Phases 1–3 implemented on stacked feature branches: Python foundation, validated nonlinear open-loop simulator, and empirical system identification. PID, independent predictive twin, fault detection and full dashboard remain future work.
+**Status:** Phases 1–4 implemented on stacked feature branches: foundation, nonlinear physics, empirical identification, and sampled P/PI/PID control. Independent predictive twin, advanced fault detection and full dashboard remain future work; PR reviews and merging are pending.
 
 > **Important:** This README describes the **target system**, not currently implemented features. HEATWIN is a **simulation-based digital twin prototype**, not a validated industrial plant twin.
 
@@ -145,11 +145,12 @@ The control error is `e = T_setpoint - T_measured`. The target controller includ
 **Implemented and verified in Phase 2:** physically derived two-temperature and first-order valve state equations; analytical forward/inverse equilibria; event-exact open-loop ODE integration; hot-flow and inlet-temperature steps; deterministic CSV and five-panel PNG plots; scientific tests and convergence checks. See [mathematical model](docs/mathematical_model.md) and [validation notebook](notebooks/01_physics_validation.ipynb).
 
 **Implemented in Phase 3:** open-loop identification experiments, bounded FO/FOPDT/two-pole fitting, analytical three-state Jacobian and transfer function, independent validation and final test, operating-point sensitivity, seven scientific figures, and an exported FOPDT handover file. See [system identification documentation](docs/system_identification.md) and [notebook](notebooks/02_system_identification.ipynb).
+
+**Implemented in Phase 4:** sampled P, PI and filtered PID, analytic-bias/bumpless initialization, valve saturation and conditional integral anti-windup, Ziegler–Nichols and IMC tuning from the saved Phase 3 model, nonlinear closed-loop setpoint/disturbance/uncertainty experiments, eight generated scientific figures, reproducible metrics, scientific tests and a Phase 5 data/parameter handover. See [PID design and results](docs/pid_controller_design.md), [controller comparison notebook](notebooks/03_controller_comparison.ipynb), and `configs/control/phase4_recommended.json`.
 \n**Still planned for subsequent phases:**
 
 - Interactive Streamlit dashboard: setpoint, P/PI/PID selection, gains, valve position, temperatures, heat duty, alarms.
 - Virtual process simulation: deterministic seeded runs, user-specified disturbances, selectable initial conditions.
-- Controller study: manual tuning, Ziegler–Nichols comparison, IMC-style tuning, overshoot, settling time, IAE/ISE and valve effort.
 - Digital twin: calibrated predictive model, held-out validation, MAE/RMSE, residual trend.
 - Faults and monitoring: cold inlet temperature disturbance, valve sticking/saturation, sensor bias, threshold and residual alarms.
 - Export: CSV files, comparison figures, scenario configurations, final report results.
@@ -167,7 +168,7 @@ The control error is `e = T_setpoint - T_measured`. The target controller includ
 | PyYAML | Parameter / scenario configurations |
 | pytest | Automated physics, controller and integration tests |
 
-### Installation and verification (Phases 1–2)
+### Installation and verification (Phases 1–4)
 
 ```bash
 git clone https://github.com/shanmukhdatta/HEATWIN.git
@@ -185,11 +186,11 @@ python scripts/phase2_experiments.py --output-dir outputs/phase2
 python -m streamlit run app.py
 ```
 
-> **Phases 1–2:** The commands install the package, run real configuration and physics tests, generate open-loop heat-exchanger CSV files/PNG plots in `outputs/phase2/`, and launch the existing information-only Streamlit placeholder. No PID, system identification, predictive twin or full dashboard is implemented. For runtime dependencies without test tools, use `python -m pip install -r requirements.txt`. Python 3.11 and 3.13 are tested in CI. The default YAML resolves relative to the source checkout.
+> **Phases 1–4:** The commands install the Python package, run scientific tests, generate physics plots in `outputs/phase2/`, and launch the existing **information-only** Streamlit placeholder. The physics simulator, identification and closed-loop controllers are available through Python modules and experiment scripts, **not** through an interactive dashboard. No predictive twin or advanced fault-monitoring system exists yet. For runtime dependencies without test tools, use `python -m pip install -r requirements.txt`. Python 3.11 and 3.13 are tested in CI.
 
-**Phase 1 implemented files:** `pyproject.toml` and `requirements*.txt` define bounded dependencies; `src/heatwin/config.py` and `configs/default.yaml` define validated configuration; `tests/test_imports.py` and `tests/test_config.py` cover package/configuration behavior; `.github/workflows/tests.yml` checks Python 3.11 and 3.13. The model, controller, identification, simulation, diagnostic and visualization subpackages contain only `__init__.py` scaffolding. `configs/scenarios.yaml` is reserved for later development.
+**Phase 1 implemented files:** `pyproject.toml` and `requirements*.txt` define bounded dependencies; `src/heatwin/config.py` and `configs/default.yaml` define validated configuration; `tests/test_imports.py` and `tests/test_config.py` cover package/configuration behavior; `.github/workflows/tests.yml` checks Python 3.11 and 3.13. Later-phase modules build on the original package skeleton. `configs/scenarios.yaml` remains reserved for later development.
 
-**Phase 2 implemented files:** `src/heatwin/models/plant.py`, `models/actuator.py`, `simulation/open_loop.py`, `visualization/charts.py`, `scripts/phase2_experiments.py`, `tests/test_{plant,actuator,steady_state,open_loop}.py`, `docs/mathematical_model.md`, and `notebooks/01_physics_validation.ipynb`. The future solver and control modules shown in the target tree below are *not* implemented yet.
+**Phase 2 implemented files:** `src/heatwin/models/plant.py`, `models/actuator.py`, `simulation/open_loop.py`, `visualization/charts.py`, `scripts/phase2_experiments.py`, `tests/test_{plant,actuator,steady_state,open_loop}.py`, `docs/mathematical_model.md`, and `notebooks/01_physics_validation.ipynb`. The original first-law reference plant remains unchanged by later phases.
 
 ### Reproduce Phase 3 system identification
 
@@ -201,6 +202,17 @@ python scripts/phase3_identification.py --output-dir outputs/phase3
 ```
 
 This command regenerates real open-loop CSV data, seven PNG plots, model-comparison CSV, experimental metadata, and `outputs/phase3/selected_model.json`. The selected verified FOPDT snapshot is committed as `configs/identified/phase3_fopdt_nominal.json`. The source plant is still simulation-only; do not interpret the output as industrial measurements. Phase 3 PR is based on Phase 2 and should not be merged before Phases 1 and 2.
+
+### Reproduce Phase 4 sampled temperature control
+
+```bash
+python -m pip install -r requirements-dev.txt
+python -m pytest -q
+python -m ruff check .
+python scripts/phase4_control_experiments.py --output-dir outputs/phase4
+```
+
+The script reads the committed Phase 3 FOPDT file, simulates the actual nonlinear plant for P/PI/PID setpoint steps, inlet/flow disturbances, anti-windup and parameter uncertainty, and exports eight PNG figures, controller comparison and robustness CSVs, a structured JSON summary and a reusable selected controller snapshot. The verified nominal snapshot is tracked at `configs/control/phase4_recommended.json`. For the tested 55→57°C step, moderate IMC-PI settles without overshoot; Z-N PI/PID are faster but overshoot roughly 0.47°C. The hot-inlet 72°C robustness case makes 57°C **physically infeasible** at the configured maximum valve opening. See [the technical report](docs/pid_controller_design.md) for exact numerical metrics, validity limits, and phase-5 data boundaries. This branch is based on Phase 3 and must be reviewed after its prerequisites.
 
 ## 8. Proposed repository layout
 
@@ -275,7 +287,7 @@ Use one feature branch and pull request per task. A PR should explain what chang
 
 See **[IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md)** for the ordered milestones, file-by-file work, responsibility suggestions, numerical checks, test matrix, and final demo plan.
 
-**Phase 3 implemented:** FO/FOPDT/two-real-pole empirical fits and exact three-state local linearization are now checked against real Phase 2 open-loop trajectories. **Next task (Phase 4):** load `configs/identified/phase3_fopdt_nominal.json` for initial PI/PID tuning, validate against the nonlinear plant, and preserve saturation/anti-windup testing. No PID controller or full digital twin exists yet.
+**Phases 1–4 implemented:** the physics plant, validated identification model, P/PI/PID algorithms, and sampled nonlinear experiments have tests and reproducible exports. **Next task (Phase 5):** build an independently estimated predictive twin using only permitted measurements, with separate training and held-out validation; do not leak hidden plant state or true parameters. The full dashboard and advanced fault monitoring are not implemented.
 
 ## 13. References
 
