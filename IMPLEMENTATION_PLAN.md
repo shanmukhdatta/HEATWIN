@@ -3,7 +3,7 @@
 > **Companion to [README.md](README.md)**  
 > **Project:** Heat Exchanger Digital Twin with PID Control  
 > **Approach:** Software-only, physics-first, test-driven, reproducible experiments  
-> **Status:** Milestone 0 foundation is verified on `phase-1/project-foundation`; Milestone 1 physics/open-loop simulation has been implemented and numerically validated on `phase-2/mathematical-model` (CI/review determine merge acceptance). Identification, control, independent twin, faults and full dashboard remain pending.
+> **Status:** Milestones 0–2 (foundation, physics/open-loop, empirical identification) are implemented on stacked feature branches; GitHub Actions and PR review determine merge acceptance. PID, predictive twin, faults and full dashboard remain pending.
 
 ## 0. Definition of done
 
@@ -199,14 +199,14 @@ HEATWIN/
 
 **Primary files:** `identification/step_test.py`, `identification/fit_models.py`, `tests/test_identification.py`.
 
-- [ ] Start from a settled open-loop operating point.
-- [ ] Apply a step in valve command, e.g. 0.40 → 0.50.
-- [ ] Record `time, u, xv, mh, Tc, Th, Tc_in, Th_in, mc`.
-- [ ] Estimate `K = delta_Tc / delta_u` after settling.
-- [ ] Fit FOPDT gain, lag and effective dead time via optimization.
-- [ ] Fit a second-order comparison model (if stable and identifiable from the data).
-- [ ] Include training and held-out step inputs; report fit RMSE.
-- [ ] Present overlaid predicted and simulated response curves.
+- [x] Start from a settled open-loop operating point.
+- [x] Apply a step in valve command, e.g. 0.40 → 0.50.
+- [x] Record `time, u, xv, mh, Tc, Th, Tc_in, Th_in, mc`.
+- [x] Estimate `K = delta_Tc / delta_u` after settling.
+- [x] Fit FOPDT gain, lag and effective dead time via optimization.
+- [x] Fit a second-order comparison model (if stable and identifiable from the data).
+- [x] Include training and held-out step inputs; report fit RMSE.
+- [x] Present overlaid predicted and simulated response curves.
 
 **Caution:** FOPDT is an approximation to the higher-order plant-plus-valve dynamics. Dead time need not be an actual physical transport delay.
 

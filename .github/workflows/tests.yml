@@ -71,3 +71,22 @@ jobs:
 
       - name: Run Phase 2 reproducible experiments
         run: python scripts/phase2_experiments.py --output-dir "${{ runner.temp }}/heatwin-phase2"
+
+      - name: Run Phase 3 system identification experiments
+        run: python scripts/phase3_identification.py --output-dir "${{ runner.temp }}/heatwin-phase3"
+
+      - name: Verify Phase 3 result artifacts
+        shell: bash
+        run: |
+          test -s "${{ runner.temp }}/heatwin-phase3/model_comparison.csv"
+          test -s "${{ runner.temp }}/heatwin-phase3/summary.json"
+          test -s "${{ runner.temp }}/heatwin-phase3/selected_model.json"
+          test "$(find "${{ runner.temp }}/heatwin-phase3" -name 'figure_*.png' | wc -l)" -eq 7
+
+      - name: Upload Phase 3 reproducible experiment artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: heatwin-phase3-python-${{ matrix.python-version }}
+          path: ${{ runner.temp }}/heatwin-phase3/
+          if-no-files-found: error
+          retention-days: 30

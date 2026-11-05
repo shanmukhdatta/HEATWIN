@@ -1,0 +1,59 @@
+{
+  "selected_model": "FOPDT",
+  "model_form": "K*exp(-theta_s*s)/(tau_s*s+1)",
+  "operating_point": {
+    "tc": 54.869934874754385,
+    "th": 63.78047725559497,
+    "xv": 0.4,
+    "u": 0.4,
+    "mh": 0.046000000000000006,
+    "q": 3118.6898332942037
+  },
+  "process_gain": 13.956538712986605,
+  "time_constant_s": 25.86242679954297,
+  "effective_dead_time_s": 7.446924449931821,
+  "transfer_function": {
+    "numerator": [
+      13.956538712986605
+    ],
+    "denominator": [
+      25.86242679954297,
+      1.0
+    ],
+    "input_delay_s": 7.446924449931821,
+    "units": "deg C / valve fraction"
+  },
+  "sampling_interval_s": 1.0,
+  "training_step": {
+    "initial_u": 0.4,
+    "final_u": 0.5,
+    "step_time_s": 60.0
+  },
+  "validation_step": {
+    "initial_u": 0.4,
+    "final_u": 0.45,
+    "step_time_s": 60.0
+  },
+  "test_step": {
+    "initial_u": 0.4,
+    "final_u": 0.35,
+    "step_time_s": 60.0
+  },
+  "local_validity_guidance": {
+    "baseline_valve_fraction": 0.4,
+    "tested_command_interval_fraction": [
+      0.3,
+      0.5
+    ],
+    "caution": "Empirical LTI approximation; significant performance loss on negative/out-of-point steps. Re-identify or robustly tune outside tested conditions."
+  },
+  "training_rmse_c": 0.008730596943610364,
+  "validation_rmse_c": 0.039541254967464974,
+  "final_test_rmse_c": 0.13379819141588212,
+  "units": {
+    "process_gain": "deg C / valve fraction",
+    "time_constant": "s",
+    "effective_dead_time": "s",
+    "temperatures": "deg C"
+  }
+}

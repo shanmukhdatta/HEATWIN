@@ -1,1 +1,1 @@
-"""Identification package — implementation planned for later phases."""
+"""Empirical system identification and analytical local linearization."""
