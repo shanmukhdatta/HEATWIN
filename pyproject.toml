@@ -1,0 +1,15 @@
+[build-system]
+requires = ['setuptools>=68']
+build-backend = 'setuptools.build_meta'
+
+[project]
+name = 'heatwin'
+version = '0.1.0'
+requires-python = '>=3.11'
+dependencies = ['numpy>=1.26,<3', 'scipy>=1.11,<2', 'pandas>=2,<4', 'matplotlib>=3.8,<4', 'streamlit>=1.32,<2']
+
+[project.optional-dependencies]
+dev = ['pytest>=8,<10', 'ruff>=0.6,<1']
+
+[tool.setuptools.packages.find]
+include = ['heatwin*']

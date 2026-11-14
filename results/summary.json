@@ -1,0 +1,44 @@
+{
+  "P": {
+    "IAE": 740.5791729816311,
+    "ISE": 1024.2596622455912,
+    "ITAE": 195617.01658900178,
+    "overshoot_C": 0.0,
+    "settling_s": null,
+    "rise_90_s": null,
+    "final_error_C": 1.33999965645922,
+    "valve_travel": 0.03160786972731888
+  },
+  "PI": {
+    "IAE": 162.29975483972711,
+    "ISE": 160.2050224836978,
+    "ITAE": 14470.768566846496,
+    "overshoot_C": 0.0,
+    "settling_s": 361.0,
+    "rise_90_s": 190.0,
+    "final_error_C": 0.00812082620894472,
+    "valve_travel": 0.07636101072874257
+  },
+  "PID": {
+    "IAE": 162.34657664323618,
+    "ISE": 161.53031634904127,
+    "ITAE": 14321.55909370833,
+    "overshoot_C": 0.0,
+    "settling_s": 358.0,
+    "rise_90_s": 188.0,
+    "final_error_C": 0.007759945060058726,
+    "valve_travel": 0.0763872429968594
+  },
+  "identification": {
+    "gain_C_per_fraction": 13.952363876091281,
+    "tau_s": 25.832633424213405,
+    "delay_s": 7.454120242940046,
+    "training_rmse_C": 0.0073293522818302665
+  },
+  "held_out_twin": {
+    "pre_fault_rmse_C": 0.06624327325522149,
+    "post_fault_rmse_C": 1.3705814920263049,
+    "pre_fault_alarm_fraction": 0.0,
+    "first_alarm_delay_s": 2.0
+  }
+}
