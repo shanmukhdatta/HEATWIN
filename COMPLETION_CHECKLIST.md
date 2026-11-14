@@ -12,6 +12,6 @@ The laboratory is a simulated educational prototype. Items marked incomplete are
 - [ ] Full scientific or industrial validation: no physical data, no CFD, no boiler/pump dynamics; the included stuck valve can evade the residual alarm.
 - [x] A clean source snapshot installed both locked dependency sets and passed 34 Python tests, two frontend unit tests, lint/format, production build, three browser tests and both experiment scripts; numerical summaries matched. The subsequently added custom-initial-state case brings the local Python suite to 35 tests.
 - [x] A clean clone of the implementation passed locked installation, formatting, build, 35 Python tests and all three browser tests. A subsequent manual-valve regression test brings the local Python suite to 36.
-- [ ] Verify the final remote SHA after delivery.
+- [x] Remote delivery verified by comparing local HEAD with `git ls-remote`; repeat for any subsequent commit.
 
 Detailed mathematical assumptions and previous experiment results are in `docs/engineering.md` and `results/studies/summary.json`. The older `IMPLEMENTATION_PLAN.md` is a historical roadmap, not a completion record.
