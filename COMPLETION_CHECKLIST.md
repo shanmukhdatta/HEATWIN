@@ -1,17 +1,16 @@
-# Completion and verification checklist
+# HEATWIN implementation and verification checklist
 
-The project is a simulated teaching prototype. The scientific limitations and missed fault detection case in [engineering.md](docs/engineering.md) remain; the checks below do not imply industrial validation or a proof of stability.
+The laboratory is a simulated educational prototype. Items marked incomplete are not represented as completed by the existing UI or automated checks.
 
-- [x] Phase 1: Python packaging, locked dependencies, JSON plant configuration, lint/format commands, CI workflow and test infrastructure. Evidence: `pyproject.toml`, `requirements-lock.txt`, `configs/default.json`, `.github/workflows/tests.yml`.
-- [x] Phase 2: two-lump balances, actuator, equilibrium, energy and solver-grid checks, step and disturbances. Evidence: `heatwin/core.py`, `tests/`, `results/studies/summary.json`.
-- [x] Phase 3: first-order and FOPDT fitting, separate downward-step validation, residuals and limitations. Evidence: `heatwin/identification.py`, `results/studies/identification_validation.csv` and figure.
-- [x] Phase 4: P/PI/PID, filtered derivative, anti-windup, saturation and initialization; manual, reaction-curve, IMC and bounded optimization comparisons. Evidence: `heatwin/tuning.py`, `results/controllers.png`, `results/studies/tuning.png` and `regulatory.png`.
-- [x] Phase 5: independent FOPDT twin, held-out prediction, mismatch and monitoring. Evidence: `heatwin/diagnostics.py`, `results/studies/case_*.csv` and study summary.
-- [x] Phase 6: individual sensor bias/drift, flow, heat-transfer and stuck-valve cases, noise, mismatch and saturation; anomaly and temperature alarms. Evidence: `results/studies/fault_residuals.png` and summary. Stuck valve was missed in the example; alarm performance is not generalized.
-- [x] Phase 7: dashboard integration, parameters, fault selection, plots, comparison and export. Evidence: `app.py`, Streamlit AppTest interactions in `tests/`, and a local health endpoint check.
-- [x] Phase 8: scripts, figures, documentation, numerical checks and tests. Evidence: `scripts/experiments.py`, `scripts/studies.py`, `docs/engineering.md`; local run: 30 tests passed, lint and formatting passed.
-- [x] Independent clean environment: staged source snapshot installed from the lock file, ran tests and both experiment scripts; JSON summaries matched byte for byte. A later input-validation change was subsequently tested locally.
-- [x] Clean-clone workflow: a fresh local clone of the implementation installed locked dependencies and ran 30 tests, lint, formatting, and both experiment scripts; regenerated numerical summaries matched byte for byte.
-- [x] Remote delivery: push confirmed and the remote `main` SHA compared with local HEAD using `git ls-remote`; repeat this check for any subsequent commit.
+- [x] Existing Python heat balances, sampled P/PI/PID, identification, tuning, twin and fault studies preserved.
+- [x] FastAPI trajectory interface uses the Python simulation and a separately fitted twin; API tests cover validation, comparison and fault timing.
+- [x] React/TypeScript/Vite frontend with React Three Fiber, Drei, illustrative exchanger, tubes, baffles, source, pump, valve and sensors.
+- [x] Orbit, zoom, pan, camera reset/focus, cutaway and exploded end caps; animated illustrative particles and sensors follow the replay time and Python samples.
+- [x] Configuration, manual/automatic replay, setpoint, gains, comparison, fault selection, timeline, pause, reset, playback speed and CSV export.
+- [x] Comparison metrics, twin/residual charts, alarm indication and nine explanatory guided steps.
+- [ ] Live edits to an already-running solver without a restart; custom initial conditions; two simultaneous 3D twin views; animated signal overlay and smooth guided camera transitions.
+- [ ] Full scientific or industrial validation: no physical data, no CFD, no boiler/pump dynamics; the included stuck valve can evade the residual alarm.
+- [x] A clean source snapshot installed both locked dependency sets and passed 34 Python tests, two frontend unit tests, lint/format, production build, three browser tests and both experiment scripts; numerical summaries matched.
+- [ ] Verify the committed clean clone and remote SHA after delivery.
 
-The historical `IMPLEMENTATION_PLAN.md` describes the original roadmap and is not a current completion record. The threshold study uses only ten normal-noise seeds, identification has no experimental data or confidence interval, and finite simulation horizons do not establish robust stability.
+Detailed mathematical assumptions and previous experiment results are in `docs/engineering.md` and `results/studies/summary.json`. The older `IMPLEMENTATION_PLAN.md` is a historical roadmap, not a completion record.

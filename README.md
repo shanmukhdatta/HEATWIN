@@ -1,24 +1,12 @@
-# HEATWIN — Heat Exchanger Digital Twin with PID Control
+# HEATWIN — Interactive Heat Exchanger Control Laboratory
 
-HEATWIN is a software-only undergraduate process-dynamics project for NIT Jalandhar. It simulates a water-to-water exchanger, fits empirical models, compares P/PI/PID control, predicts with a separate digital twin, and illustrates residual-based monitoring. Parameters and results are simulated; no physical equipment or measured plant data were used.
+HEATWIN is a software-only educational process-control project for NIT Jalandhar. Its browser laboratory connects an illustrative Three.js exchanger to the existing Python heat exchanger, P/PI/PID controller, identified digital twin and residual monitor. All temperatures, flows and results are simulated; there is no physical plant or validated safety system.
 
-```mermaid
-flowchart LR
-  SP[Setpoint] --> PID[P / PI / PID]
-  PID -->|command| P[Exchanger + valve plant]
-  P -->|sensor measurement| PID
-  P --> ID[Step identification]
-  ID --> T[Open-loop FOPDT twin]
-  PID -->|command| T
-  T --> R[Residual and limits]
-  P --> R
-  R --> UI[Dashboard and results]
-  P --> UI
-```
+![HEATWIN simulation laboratory](docs/screenshots/simulation.png)
 
-## Setup and demonstration
+## Start the laboratory
 
-Python 3.12 is the tested environment. The lock file records the tested dependency versions; the package declares Python 3.11+ but other environments have not been independently checked.
+Python 3.12 and Node.js 22 or later are the tested targets. Run the commands from the repository root in two terminals:
 
 ```bash
 git clone https://github.com/shanmukhdatta/HEATWIN.git
@@ -27,19 +15,38 @@ python -m venv .venv
 source .venv/bin/activate  # Windows: .venv\Scripts\activate
 pip install -r requirements-lock.txt
 pip install --no-deps .
-python -m pytest -q
-ruff check .
-ruff format --check .
-python -m scripts.experiments
-python -m scripts.studies
-streamlit run app.py
+python -m uvicorn heatwin.api:app --host 127.0.0.1 --port 8011
 ```
 
-The dashboard exposes the plant UA, setpoint, gains, controller type, tuning, sensor noise, fault selection and residual threshold. Run a scenario to see temperatures, valve command and actual position, P/PI/PID metrics, twin residuals, alarms and CSV export. The scripts regenerate CSV, figures and summaries under `results/`; `configs/default.json` sets plant parameters for the baseline experiments. Studies use the nominal parameters and record configuration, seeds, gains and fault settings in code and the results summary. Run commands from the repository root.
+```bash
+cd HEATWIN/frontend
+npm ci
+npm run dev
+```
 
-## Engineering approach
+Open the local address printed by Vite (normally `http://localhost:5173`). The frontend proxies `/api` to `127.0.0.1:8011`. FastAPI documentation is available at `http://127.0.0.1:8011/docs`. The old `app.py` Streamlit interface is retained temporarily as a legacy entry point while full feature parity is reviewed; the React application is the primary interface.
 
-The plant has two perfectly mixed thermal states and a first-order valve. For constant properties and no heat loss:
+## Use the lab
+
+1. Drag to orbit, scroll to zoom, and pan using the mouse. Toggle **Cutaway** to expose the tube bundle, **Explode** to move the end caps, or reset the camera. Select equipment and use **Focus** to inspect it.
+2. Press play. The timeline, readings, process view and chart follow the same recorded simulation time. Pause, reset or seek; playback speed changes simulated seconds per wall-clock second.
+3. Select a controller, change gains or a setpoint, and choose **Apply & restart**. The setpoint change occurs at 30 simulated seconds. Configuration changes intentionally restart the run instead of changing a running numerical state. Manual mode uses a specified valve command rather than feedback control.
+4. Enable P/PI/PID comparison and rerun for matched initial conditions and disturbances. Switch the 3D trajectory or inspect the comparison table. Switch the chart to valve output to see command and actual actuator position.
+5. Choose a disturbance or fault and an injection time, then rerun. The residual alarm is an anomaly indication, not fault classification. Open **Digital Twin** or **Learn** for interpretation and guided steps. Export the current trajectory as CSV.
+
+The source/boiler and pump are illustrative boundary equipment, not modeled boiler or pump dynamics. The visible tube bundle, baffles, streamlines, interpolated colors and flow paths explain the process; they are **not CFD results**. The real plant model contains only two well-mixed thermal states and a valve state. Valve position, temperature, flow, heat duty and alarm indicators use Python simulation samples.
+
+## Architecture and model
+
+```text
+React controls → FastAPI /api/run → Python plant + PID + identified twin
+                                         ↓ timestamped samples
+3D process / instruments ← shared playback clock → charts, metrics and CSV
+```
+
+The API calculates a deterministic complete trajectory per request. The browser replays it; no frontend code calculates the exchanger dynamics. Comparison mode runs three independent simulations with common initial state, setpoint, perturbation, sample time and seed. The twin is an open-loop FOPDT model fitted to a separate nominal step; it does not know hidden plant states or unmeasured disturbances. A residual exceeding 1 °C for three samples triggers an alarm.
+
+The plant assumes constant properties, fixed holdup, perfect mixing, no heat loss, and no phase change:
 
 ```text
 rho Vc cp dTc/dt = mc cp (Tc,in − Tc) + UA (Th − Tc)
@@ -48,24 +55,29 @@ tau_v dx/dt = clip(u,0,1) − x
 mh = mh_min + (mh_max − mh_min) clip(x,0,1)
 ```
 
-The default configuration uses water-like properties, UA 350 W/K and inlet temperatures 30 and 80 °C. An analytic equilibrium and energy conservation are tested. A sampled parallel controller implements filtering, saturation, anti-windup and manual-to-auto initialization. Manual, Ziegler–Nichols, Cohen–Coon, IMC and bounded model-based optimization are compared where the FOPDT assumptions apply. The twin is fitted on one valve step and evaluated on different inputs. Residuals flag anomalies, not fault identities. See [engineering notes](docs/engineering.md) for equations, units, formulas, metric definitions and limitations.
+The controller supports P, PI and PID, filtered derivative on measurement, output limits and conditional integration. Gain units are fraction/°C, fraction/(°C·s) and fraction·s/°C. Full assumptions, tuning formulas, units and validation are in [engineering notes](docs/engineering.md).
 
-## Results from the included simulations
+## Experiments and verification
 
-The default setpoint test yields the following manual-gain results; full precision is in [summary.json](results/summary.json).
+```bash
+python -m pytest -q
+ruff check .
+ruff format --check .
+python -m scripts.experiments
+python -m scripts.studies
+cd frontend
+npm run format:check
+npm test
+npm run build
+npm run e2e
+```
 
-| Controller | IAE (°C s) | Final error (°C) | Settling (s) |
-|---|---:|---:|---:|
-| P | 740.58 | 1.340 | Not reached |
-| PI | 162.30 | 0.0081 | 361 |
-| PID | 162.35 | 0.0078 | 358 |
+Playwright starts both local servers if they are not running. Install a Playwright Chromium browser with `npx playwright install --with-deps chromium` when no system Chromium is available. Set `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` to use another installed Chromium. Tests and builds require a network connection for the initial dependency installation; the app has no paid API dependency.
 
-The separate downward-step validation has RMSE 0.356 °C for the first-order model and 0.353 °C for FOPDT. In the individual fault studies, the example threshold detected sensor bias after 2 s, drift after 114 s, flow change after 7 s and UA degradation after 7 s. The stuck-valve case was **not detected** within the horizon. Ten normal-noise seeds generated no alarms at the chosen threshold; this small sample does not establish a false-alarm probability. More results, including tuning and disturbance rejection, are in [the study summary](results/studies/summary.json).
+The baseline manual-gain setpoint test has P / PI / PID IAE of **740.58 / 162.30 / 162.35 °C·s**, with final errors **1.340 / 0.0081 / 0.0078 °C**. On a held-out downward valve step, first-order and FOPDT RMSE are **0.356 / 0.353 °C**. In individual simulated faults the residual alarm detects sensor bias in 2 s, drift in 114 s and flow and UA changes in 7 s; it misses the demonstrated stuck valve. Ten normal-noise seeds produced no alarms, which is not a statistical guarantee. See [study results](results/studies/summary.json) for assumptions and complete metrics.
 
-![Controller comparison](results/controllers.png)
-![Held-out identification](results/studies/identification_validation.png)
-![Fault residuals](results/studies/fault_residuals.png)
+Screenshots captured from the running application: [cutaway](docs/screenshots/cutaway.png), [PID controls](docs/screenshots/pid.png), [comparison](docs/screenshots/comparison.png), [digital twin](docs/screenshots/twin.png), [fault](docs/screenshots/fault.png), [guided learning](docs/screenshots/learning.png), and [mobile](docs/screenshots/mobile.png).
 
-## Limitations and future work
+## Limitations
 
-This is a lumped, constant-property simulation, not a distributed exchanger design or an experimentally validated industrial twin. Identification is local and based on simulated data; one step cannot provide credible parameter confidence intervals. Faults and unmeasured disturbances can produce similar residuals; the detector misses the shown stuck-valve case and must not be used for safety decisions. The sampled closed loop is locally linearized at the nominal unsaturated equilibrium; stability and robustness are not proved across all operating conditions. Physical measurements, richer excitation, sensor dynamics, confidence intervals, more varied faults and independent validation would be needed for deployment. The [completion checklist](COMPLETION_CHECKLIST.md) records verification evidence and any remaining delivery work. The older [implementation plan](IMPLEMENTATION_PLAN.md) is historical.
+This is a local educational prototype, not an industrial digital twin or safety system. There are no real measurements, pump or boiler dynamics, spatial temperature fields, or CFD. The residual cannot distinguish faults from model mismatch, and the included stuck-valve case demonstrates a missed detection. Finite-horizon simulations and local linearization do not prove robust global stability. Simulation starts at a calculated equilibrium; custom initial states and live parameter changes without restarting are not yet supported. The tutorial provides guided instructions rather than enforcing each activity, and twin comparison uses a shared scene and overlaid traces rather than two independent 3D views. Camera focus jumps to its target rather than animating a guided transition. Large Three.js/chart bundles may affect startup on slower networks. See [completion checklist](COMPLETION_CHECKLIST.md) for verified and remaining items.

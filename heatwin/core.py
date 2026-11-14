@@ -158,6 +158,7 @@ def simulate(
     open_loop_value=0.5,
     flow_factor=1.0,
     sensor_drift=0.0,
+    noise_at_fault=False,
 ):
     values = [
         duration,
@@ -195,7 +196,7 @@ def simulate(
         measured = (
             y[0]
             + (bias + sensor_drift * (t - fault_time) if active else 0)
-            + rng.normal(0, noise)
+            + rng.normal(0, noise if active or not noise_at_fault else 0.0)
         )
         command = (
             (open_loop_value if t >= step_time else 0.4)
