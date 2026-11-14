@@ -1,4 +1,4 @@
-import { Canvas, useThree } from "@react-three/fiber";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import {
   ContactShadows,
   OrbitControls,
@@ -91,6 +91,10 @@ function CameraActions({
 }) {
   const { camera, controls } = useThree();
   const mounted = useRef(false);
+  const destination = useRef<{
+    position: THREE.Vector3;
+    target: THREE.Vector3;
+  } | null>(null);
   useEffect(() => {
     if (!mounted.current) {
       mounted.current = true;
@@ -104,27 +108,36 @@ function CameraActions({
       sensor: [1.1, -0.65, 0],
     };
     const target = new THREE.Vector3(...positions[selected]);
-    camera.position.copy(target.clone().add(new THREE.Vector3(3, 2, 4)));
-    const orbit = controls as unknown as {
-      target: THREE.Vector3;
-      update: () => void;
-    } | null;
-    if (orbit) {
-      orbit.target.copy(target);
-      orbit.update();
-    }
+    destination.current = {
+      target,
+      position: target.clone().add(new THREE.Vector3(3, 2, 4)),
+    };
   }, [focusKey]);
   useEffect(() => {
-    camera.position.set(6, 4.3, 8);
+    destination.current = {
+      target: new THREE.Vector3(0, 0.1, 0),
+      position: new THREE.Vector3(6, 4.3, 8),
+    };
+  }, [resetKey]);
+  useFrame((_, delta) => {
+    const goal = destination.current;
+    if (!goal) return;
+    const alpha = 1 - Math.exp(-5 * delta);
+    camera.position.lerp(goal.position, alpha);
     const orbit = controls as unknown as {
       target: THREE.Vector3;
       update: () => void;
     } | null;
     if (orbit) {
-      orbit.target.set(0, 0.1, 0);
+      orbit.target.lerp(goal.target, alpha);
       orbit.update();
     }
-  }, [resetKey]);
+    if (
+      camera.position.distanceTo(goal.position) < 0.01 &&
+      (!orbit || orbit.target.distanceTo(goal.target) < 0.01)
+    )
+      destination.current = null;
+  });
   return null;
 }
 function Exchanger({

@@ -39,3 +39,14 @@ def test_noise_is_injected_only_after_configured_time():
     ).json()["runs"]["PID"]["samples"]
     assert samples[49]["measurement"] == samples[49]["tc"]
     assert samples[50]["measurement"] != samples[50]["tc"]
+
+
+def test_configurable_initial_state_is_used_and_validated():
+    body = client.post(
+        "/api/run", json={"duration": 90, "initial_state": [45, 70, 0.5]}
+    ).json()
+    initial = body["runs"]["PID"]["samples"][0]
+    assert [initial["tc"], initial["th"], initial["valve"]] == [45, 70, 0.5]
+    assert (
+        client.post("/api/run", json={"initial_state": [45, 70, 2]}).status_code == 422
+    )

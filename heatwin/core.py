@@ -159,6 +159,7 @@ def simulate(
     flow_factor=1.0,
     sensor_drift=0.0,
     noise_at_fault=False,
+    initial_state=None,
 ):
     values = [
         duration,
@@ -185,11 +186,20 @@ def simulate(
     ):
         raise ValueError("invalid simulation settings")
     rng = np.random.default_rng(seed)
-    y = equilibrium(0.4, p)
+    y = (
+        equilibrium(0.4, p)
+        if initial_state is None
+        else np.asarray(initial_state, dtype=float).copy()
+    )
+    if y.shape != (3,) or not np.all(np.isfinite(y)) or not 0 <= y[2] <= 1:
+        raise ValueError(
+            "initial state requires two finite temperatures and a valve position in [0, 1]"
+        )
     initial = y[0]
-    controller = PID(*gains, dt=dt, bias=0.4)
+    initial_valve = float(y[2])
+    controller = PID(*gains, dt=dt, bias=initial_valve)
     rows = []
-    command = 0.4
+    command = initial_valve
     for t in np.arange(0, duration + dt / 2, dt):
         active = t >= fault_time
         sp = setpoint if t >= step_time else initial
@@ -199,7 +209,7 @@ def simulate(
             + rng.normal(0, noise if active or not noise_at_fault else 0.0)
         )
         command = (
-            (open_loop_value if t >= step_time else 0.4)
+            (open_loop_value if t >= step_time else initial_valve)
             if open_loop
             else controller.update(sp, measured)
         )

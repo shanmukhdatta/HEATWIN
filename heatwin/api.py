@@ -10,7 +10,7 @@ from typing import Literal
 import numpy as np
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 
 from heatwin.core import Parameters, fit_fopdt, metrics, simulate
 from heatwin.diagnostics import predict_twin, residual_alarm
@@ -49,6 +49,18 @@ class Request(BaseModel):
     ] = "none"
     fault_time: int = Field(default=120, ge=0, le=1200)
     seed: int = 42
+    initial_state: tuple[float, float, float] | None = None
+
+    @field_validator("initial_state")
+    @classmethod
+    def valid_initial_state(cls, value):
+        if value is not None and (
+            not np.all(np.isfinite(value)) or not 0 <= value[2] <= 1
+        ):
+            raise ValueError(
+                "initial state requires finite temperatures and a valve fraction in [0, 1]"
+            )
+        return value
 
 
 @lru_cache(maxsize=1)
@@ -113,6 +125,7 @@ def run(request: Request):
             open_loop=request.mode == "manual",
             open_loop_value=request.manual_valve,
             noise_at_fault=True,
+            initial_state=request.initial_state,
             **options,
         )
         data["twin"] = predict_twin(data.time, data.command, data.tc.iloc[0], *model)

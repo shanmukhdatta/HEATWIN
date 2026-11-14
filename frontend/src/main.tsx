@@ -478,6 +478,41 @@ function App() {
               <label className="check">
                 <input
                   type="checkbox"
+                  checked={config.initial_state !== null}
+                  onChange={(e) =>
+                    change(
+                      "initial_state",
+                      e.target.checked ? [55, 64, 0.4] : null,
+                    )
+                  }
+                />
+                Set initial conditions
+              </label>
+              {config.initial_state && (
+                <div className="gain-grid">
+                  {(
+                    ["Initial cold", "Initial hot", "Initial valve"] as const
+                  ).map((label, index) => (
+                    <NumberField
+                      key={label}
+                      label={label}
+                      unit={index === 2 ? "fraction" : "°C"}
+                      value={config.initial_state![index]}
+                      step={index === 2 ? 0.05 : 1}
+                      onChange={(value) => {
+                        const next: [number, number, number] = [
+                          ...config.initial_state!,
+                        ];
+                        next[index] = value;
+                        change("initial_state", next);
+                      }}
+                    />
+                  ))}
+                </div>
+              )}
+              <label className="check">
+                <input
+                  type="checkbox"
                   checked={config.compare}
                   onChange={(e) => change("compare", e.target.checked)}
                 />{" "}
@@ -596,17 +631,26 @@ function App() {
               </div>
               <div className="loop-bar">
                 <span>CONTROL LOOP</span>
-                <b>SETPOINT</b>
-                <i>→</i>
-                <b>PID</b>
-                <i>→</i>
-                <b>VALVE</b>
-                <i>→</i>
-                <b>EXCHANGER</b>
-                <i>→</i>
-                <b>SENSOR</b>
-                <i>↩</i>
-                <b>FEEDBACK</b>
+                {[
+                  "SETPOINT",
+                  "PID",
+                  "VALVE",
+                  "EXCHANGER",
+                  "SENSOR",
+                  "FEEDBACK",
+                ].map((node, index) => (
+                  <span
+                    className={
+                      Math.floor(time / 2) % 6 === index
+                        ? "signal-active"
+                        : "signal-node"
+                    }
+                    key={node}
+                  >
+                    {index > 0 && <i>{index === 5 ? "↩" : "→"}</i>}
+                    {node}
+                  </span>
+                ))}
               </div>
             </div>
             <div className="chart-panel panel">

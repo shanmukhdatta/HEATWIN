@@ -43,6 +43,7 @@ export type Config = {
   fault: string;
   fault_time: number;
   seed: number;
+  initial_state: [number, number, number] | null;
 };
 export const defaults: Config = {
   duration: 360,
@@ -59,6 +60,7 @@ export const defaults: Config = {
   fault: "none",
   fault_time: 120,
   seed: 42,
+  initial_state: null,
 };
 export function indexAt(time: number, length: number) {
   return Math.min(Math.max(Math.floor(time), 0), Math.max(length - 1, 0));

@@ -84,6 +84,20 @@ test("new setpoint uses authoritative valve dynamics and reset freezes playback"
   await page.getByTitle("Focus selected equipment").click();
   await page.getByTitle("Reset camera").click();
   await page.getByRole("button", { name: "SHOW VALVE OUTPUT" }).click();
+  await page.getByLabel("Set initial conditions").check();
+  await page.getByLabel("Initial cold").fill("45");
+  await page.getByLabel("Initial hot").fill("70");
+  await page.getByLabel("Initial valve").fill("0.5");
+  const customResponse = page.waitForResponse(
+    (r) => r.url().includes("/api/run") && r.request().method() === "POST",
+  );
+  await page.getByRole("button", { name: "APPLY & RESTART" }).click();
+  const custom = await (await customResponse).json();
+  expect([
+    custom.runs.PID.samples[0].tc,
+    custom.runs.PID.samples[0].th,
+    custom.runs.PID.samples[0].valve,
+  ]).toEqual([45, 70, 0.5]);
 });
 
 test("mobile layout keeps scene and controls reachable", async ({ page }) => {
