@@ -13,7 +13,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field, field_validator
 
 from heatwin.core import Parameters, fit_fopdt, metrics, simulate
-from heatwin.diagnostics import predict_twin, residual_alarm
+from heatwin.diagnostics import predict_twin, residual_alarm, safety_limits
 from heatwin.tuning import tune
 
 app = FastAPI(title="HEATWIN simulation API")
@@ -131,6 +131,7 @@ def run(request: Request):
         data["twin"] = predict_twin(data.time, data.command, data.tc.iloc[0], *model)
         data["residual"] = data.measurement - data.twin
         data["alarm"] = residual_alarm(data.residual, 1.0, 3)
+        data["safety_alarm"] = safety_limits(data.measurement, 25.0, 65.0)
         data["hot_flow"] = 0.01 + 0.09 * data.valve
         data["heat_w"] = data.ua * (data.th - data.tc)
         view = data[data.time >= 30]

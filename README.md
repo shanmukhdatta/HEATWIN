@@ -44,7 +44,7 @@ React controls → FastAPI /api/run → Python plant + PID + identified twin
 3D process / instruments ← shared playback clock → charts, metrics and CSV
 ```
 
-The API calculates a deterministic complete trajectory per request. The browser replays it; no frontend code calculates the exchanger dynamics. Comparison mode runs three independent simulations with common initial state, setpoint, perturbation, sample time and seed. The twin is an open-loop FOPDT model fitted to a separate nominal step; it does not know hidden plant states or unmeasured disturbances. A residual exceeding 1 °C for three samples triggers an alarm.
+The API calculates a deterministic complete trajectory per request. The browser replays it; no frontend code calculates the exchanger dynamics. Comparison mode runs three independent simulations with common initial state, setpoint, perturbation, sample time and seed. The twin is an open-loop FOPDT model fitted to a separate nominal step; it does not know hidden plant states or unmeasured disturbances. A residual exceeding 1 °C for three samples triggers an anomaly alarm; the measured temperature also triggers a separate illustrative 25–65 °C limit alarm.
 
 The plant assumes constant properties, fixed holdup, perfect mixing, no heat loss, and no phase change:
 

@@ -98,6 +98,11 @@ test("new setpoint uses authoritative valve dynamics and reset freezes playback"
     custom.runs.PID.samples[0].th,
     custom.runs.PID.samples[0].valve,
   ]).toEqual([45, 70, 0.5]);
+  await page.getByLabel("Initial cold").fill("70");
+  await page.getByRole("button", { name: "APPLY & RESTART" }).click();
+  await expect(
+    page.getByText("Temperature limit alarm", { exact: true }),
+  ).toBeVisible();
 });
 
 test("mobile layout keeps scene and controls reachable", async ({ page }) => {

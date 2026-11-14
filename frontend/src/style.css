@@ -1043,3 +1043,6 @@ footer b {
 .loop-bar .signal-active i {
   margin-right: 10px;
 }
+.alarm + .alarm {
+  margin-top: 8px;
+}

@@ -13,6 +13,7 @@ export type Sample = {
   twin: number;
   residual: number;
   alarm: boolean;
+  safety_alarm: boolean;
   hot_flow: number;
   heat_w: number;
 };

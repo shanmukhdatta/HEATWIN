@@ -139,6 +139,7 @@ const empty: Sample = {
   twin: 54.87,
   residual: 0,
   alarm: false,
+  safety_alarm: false,
   hot_flow: 0.046,
   heat_w: 3000,
 };
@@ -934,6 +935,17 @@ function App() {
                     ? "Anomaly detected; cause not identified."
                     : "Threshold 1 °C · 3 samples"}
                 </small>
+              </div>
+            </div>
+            <div className={`alarm ${sample.safety_alarm ? "triggered" : ""}`}>
+              <span>{sample.safety_alarm ? "!" : "✓"}</span>
+              <div>
+                <b>
+                  {sample.safety_alarm
+                    ? "Temperature limit alarm"
+                    : "Temperature within limits"}
+                </b>
+                <small>Measured temperature · 25–65 °C</small>
               </div>
             </div>
             <div className="component-card">

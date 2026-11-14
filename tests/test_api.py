@@ -60,3 +60,10 @@ def test_manual_mode_drives_actuator_with_lag():
     assert samples[30]["command"] == 0.7
     assert samples[30]["valve"] < samples[30]["command"]
     assert samples[40]["valve"] > samples[30]["valve"]
+
+
+def test_safety_alarm_uses_measured_temperature():
+    body = client.post(
+        "/api/run", json={"duration": 90, "initial_state": [70, 80, 0.4]}
+    ).json()
+    assert body["runs"]["PID"]["samples"][0]["safety_alarm"] is True
