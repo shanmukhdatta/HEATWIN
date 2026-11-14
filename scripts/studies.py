@@ -21,6 +21,7 @@ from heatwin.core import (
 )
 from heatwin.diagnostics import detection_metrics, predict_twin, residual_alarm
 from heatwin.identification import first_order, fit_first_order
+from heatwin.stability import local_stability
 from heatwin.tuning import optimize_gains, tune
 
 OUT = Path("results/studies")
@@ -102,6 +103,9 @@ def main():
         "gains": opt.x.tolist(),
     }
     summary["tuning"] = {}
+    summary["local_stability"] = {
+        name: local_stability(gains) for name, gains in choices.items()
+    }
     fig, ax = plt.subplots(figsize=(9, 5))
     for name, gains in choices.items():
         d = simulate(duration=600, gains=gains)

@@ -161,3 +161,11 @@ def test_metrics_rejects_invalid_times():
 
     with pytest.raises(ValueError):
         metrics([0.0, 0.0], [50.0, 51.0], [52.0, 52.0], [0.4, 0.5])
+
+
+def test_local_closed_loop_linearization_predicts_decay():
+    from heatwin.stability import local_stability
+
+    result = local_stability((0.04, 0.001, 0.08))
+    assert result["spectral_radius"] < 1.0
+    assert result["stable"]
