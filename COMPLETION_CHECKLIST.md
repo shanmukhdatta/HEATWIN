@@ -11,7 +11,7 @@ The laboratory is a simulated educational prototype. Items marked incomplete are
 - [ ] Live edits to an already-running solver without a restart; two simultaneous 3D twin views; automatic guided camera choreography. The loop highlight follows the replay clock and focus/reset interpolate the camera.
 - [ ] Full scientific or industrial validation: no physical data, no CFD, no boiler/pump dynamics; the included stuck valve can evade the residual alarm.
 - [x] A clean source snapshot installed both locked dependency sets and passed 34 Python tests, two frontend unit tests, lint/format, production build, three browser tests and both experiment scripts; numerical summaries matched. Subsequent custom-initial-state, manual-valve and temperature-limit cases bring the local Python suite to 37 tests.
-- [x] A clean clone of the implementation passed locked installation, formatting, build, 35 Python tests and all three browser tests. Subsequent manual-valve and temperature-limit regression tests bring the local Python suite to 37.
+- [x] A clean clone of the final implementation passed locked installation, formatting, build, 37 Python tests, frontend unit tests and all three browser tests.
 - [x] Remote delivery verified by comparing local HEAD with `git ls-remote`; repeat for any subsequent commit.
 
 Detailed mathematical assumptions and previous experiment results are in `docs/engineering.md` and `results/studies/summary.json`. The older `IMPLEMENTATION_PLAN.md` is a historical roadmap, not a completion record.
