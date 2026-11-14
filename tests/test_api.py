@@ -50,3 +50,13 @@ def test_configurable_initial_state_is_used_and_validated():
     assert (
         client.post("/api/run", json={"initial_state": [45, 70, 2]}).status_code == 422
     )
+
+
+def test_manual_mode_drives_actuator_with_lag():
+    result = client.post(
+        "/api/run", json={"duration": 90, "mode": "manual", "manual_valve": 0.7}
+    ).json()
+    samples = result["runs"]["PID"]["samples"]
+    assert samples[30]["command"] == 0.7
+    assert samples[30]["valve"] < samples[30]["command"]
+    assert samples[40]["valve"] > samples[30]["valve"]
