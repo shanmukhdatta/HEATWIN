@@ -12,6 +12,6 @@ The project is a simulated teaching prototype. The scientific limitations and mi
 - [x] Phase 8: scripts, figures, documentation, numerical checks and tests. Evidence: `scripts/experiments.py`, `scripts/studies.py`, `docs/engineering.md`; local run: 30 tests passed, lint and formatting passed.
 - [x] Independent clean environment: staged source snapshot installed from the lock file, ran tests and both experiment scripts; JSON summaries matched byte for byte. A later input-validation change was subsequently tested locally.
 - [x] Clean-clone workflow: a fresh local clone of the implementation installed locked dependencies and ran 30 tests, lint, formatting, and both experiment scripts; regenerated numerical summaries matched byte for byte.
-- [ ] Verify the final remote commit SHA after pushing.
+- [x] Remote delivery: push confirmed and the remote `main` SHA compared with local HEAD using `git ls-remote`; repeat this check for any subsequent commit.
 
 The historical `IMPLEMENTATION_PLAN.md` describes the original roadmap and is not a current completion record. The threshold study uses only ten normal-noise seeds, identification has no experimental data or confidence interval, and finite simulation horizons do not establish robust stability.
