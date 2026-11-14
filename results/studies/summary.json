@@ -1,0 +1,293 @@
+{
+  "identification": {
+    "first_order": [
+      14.049011743491958,
+      34.02723997708845
+    ],
+    "fopdt": [
+      13.958138937175457,
+      25.87386608659648,
+      7.444157413223004
+    ],
+    "validation_fo_rmse_C": 0.35586870997886927,
+    "validation_fopdt_rmse_C": 0.3528570025899179
+  },
+  "optimization": {
+    "success": true,
+    "message": "Optimization terminated successfully.",
+    "objective": 36.25182373897884,
+    "gains": [
+      0.12440763970385409,
+      0.0045650408175434065,
+      0.0
+    ]
+  },
+  "tuning": {
+    "manual": {
+      "IAE": 162.34657664323618,
+      "ISE": 161.53031634904127,
+      "ITAE": 14321.55909370833,
+      "overshoot_C": 0.0,
+      "settling_s": 358.0,
+      "rise_90_s": 188.0,
+      "final_error_C": 0.007759945060058726,
+      "valve_travel": 0.0763872429968594,
+      "gains": [
+        0.04,
+        0.001,
+        0.08
+      ],
+      "saturation_fraction": 0.0,
+      "max_abs_error_C": 2.1300651252456007
+    },
+    "imc": {
+      "IAE": 66.78559486683214,
+      "ISE": 84.78610957744355,
+      "ITAE": 1813.4660574576876,
+      "overshoot_C": 0.0,
+      "settling_s": 111.0,
+      "rise_90_s": 62.0,
+      "final_error_C": 1.1233066956606308e-06,
+      "valve_travel": 0.042483010953235034,
+      "gains": [
+        0.07164278880593791,
+        0.0024206961226113425,
+        0.23312408955108563
+      ],
+      "saturation_fraction": 0.0,
+      "max_abs_error_C": 2.1300651252456007
+    },
+    "zn": {
+      "IAE": 29.97021929126411,
+      "ISE": 40.16465804287477,
+      "ITAE": 374.88982852015016,
+      "overshoot_C": 0.3205570631508934,
+      "settling_s": 52.0,
+      "rise_90_s": 18.0,
+      "final_error_C": 0.0,
+      "valve_travel": 0.5595154034452031,
+      "gains": [
+        0.2988130133319018,
+        0.020070304585521146,
+        1.1122055541810905
+      ],
+      "saturation_fraction": 0.0066555740432612314,
+      "max_abs_error_C": 2.1300651252456007
+    },
+    "cohen_coon": {
+      "IAE": 28.07194712102687,
+      "ISE": 39.24252404488008,
+      "ITAE": 324.1147034867757,
+      "overshoot_C": 0.27468063670300324,
+      "settling_s": 51.0,
+      "rise_90_s": 17.0,
+      "final_error_C": 2.842170943040401e-14,
+      "valve_travel": 0.7768808390656656,
+      "gains": [
+        0.34992515645915306,
+        0.02132703472838977,
+        0.9001481299787089
+      ],
+      "saturation_fraction": 0.009983361064891847,
+      "max_abs_error_C": 2.1300651252456007
+    },
+    "optimized_fopdt": {
+      "IAE": 37.82000442846324,
+      "ISE": 56.0975404371064,
+      "ITAE": 498.9340706142841,
+      "overshoot_C": 0.08115278017870509,
+      "settling_s": 55.0,
+      "rise_90_s": 28.0,
+      "final_error_C": 7.678274016598152e-09,
+      "valve_travel": 0.20809425591661834,
+      "gains": [
+        0.12440763970385409,
+        0.0045650408175434065,
+        0.0
+      ],
+      "saturation_fraction": 0.0,
+      "max_abs_error_C": 2.1300651252456007
+    }
+  },
+  "faults": {
+    "normal": {
+      "false_alarm_fraction": 0.0,
+      "detection_delay_s": null,
+      "injection_at_300": false,
+      "pre_rmse_C": 0.06668067013318538,
+      "post_rmse_C": 0.1573835082270787,
+      "post_alarm_fraction": 0.0,
+      "high_temperature_fraction": 0.0
+    },
+    "sensor_bias": {
+      "false_alarm_fraction": 0.0,
+      "detection_delay_s": 2.0,
+      "injection_at_300": true,
+      "pre_rmse_C": 0.06668067013318538,
+      "post_rmse_C": 0.03881239067930272,
+      "post_alarm_fraction": 0.9933554817275747,
+      "high_temperature_fraction": 0.0
+    },
+    "sensor_drift": {
+      "false_alarm_fraction": 0.0,
+      "detection_delay_s": 114.0,
+      "injection_at_300": true,
+      "pre_rmse_C": 0.06668067013318538,
+      "post_rmse_C": 0.06847259435763826,
+      "post_alarm_fraction": 0.6212624584717608,
+      "high_temperature_fraction": 0.0
+    },
+    "noise": {
+      "false_alarm_fraction": 0.0,
+      "detection_delay_s": null,
+      "injection_at_300": false,
+      "pre_rmse_C": 0.11893503435632828,
+      "post_rmse_C": 0.2190747052878352,
+      "post_alarm_fraction": 0.0,
+      "high_temperature_fraction": 0.0
+    },
+    "flow": {
+      "false_alarm_fraction": 0.0,
+      "detection_delay_s": 7.0,
+      "injection_at_300": true,
+      "pre_rmse_C": 0.06668067013318538,
+      "post_rmse_C": 4.537689446581063,
+      "post_alarm_fraction": 0.9767441860465116,
+      "high_temperature_fraction": 0.0
+    },
+    "cold_inlet": {
+      "false_alarm_fraction": 0.0,
+      "detection_delay_s": 23.0,
+      "injection_at_300": true,
+      "pre_rmse_C": 0.06668067013318538,
+      "post_rmse_C": 1.7840848863097925,
+      "post_alarm_fraction": 0.9235880398671097,
+      "high_temperature_fraction": 0.0
+    },
+    "degradation": {
+      "false_alarm_fraction": 0.0,
+      "detection_delay_s": 7.0,
+      "injection_at_300": true,
+      "pre_rmse_C": 0.06668067013318538,
+      "post_rmse_C": 3.1831257326988895,
+      "post_alarm_fraction": 0.9767441860465116,
+      "high_temperature_fraction": 0.0
+    },
+    "stuck_valve": {
+      "false_alarm_fraction": 0.0,
+      "detection_delay_s": null,
+      "injection_at_300": true,
+      "pre_rmse_C": 0.06668067013318538,
+      "post_rmse_C": 0.29152413319504905,
+      "post_alarm_fraction": 0.0,
+      "high_temperature_fraction": 0.0
+    },
+    "parameter_mismatch": {
+      "false_alarm_fraction": 0.0,
+      "detection_delay_s": null,
+      "injection_at_300": false,
+      "pre_rmse_C": 0.5222823354144741,
+      "post_rmse_C": 1.0678428636187742,
+      "post_alarm_fraction": 0.6179401993355482,
+      "high_temperature_fraction": 0.0
+    },
+    "saturation": {
+      "false_alarm_fraction": 0.7,
+      "detection_delay_s": null,
+      "injection_at_300": false,
+      "pre_rmse_C": 2.36875633740008,
+      "post_rmse_C": 3.097473435997267,
+      "post_alarm_fraction": 1.0,
+      "high_temperature_fraction": 0.0
+    }
+  },
+  "regulatory": {
+    "P": {
+      "IAE": 267.16042592672966,
+      "ISE": 241.99712174081745,
+      "ITAE": 41341.01790666432,
+      "overshoot_C": 0.0,
+      "settling_s": null,
+      "rise_90_s": null,
+      "final_error_C": 0.920403162088995,
+      "valve_travel": 0.03691553975485273
+    },
+    "PI": {
+      "IAE": 98.07101124274531,
+      "ISE": 51.665528924279876,
+      "ITAE": 8767.679866688592,
+      "overshoot_C": 0.0,
+      "settling_s": null,
+      "rise_90_s": null,
+      "final_error_C": 0.04628075096884032,
+      "valve_travel": 0.09994538165698336
+    },
+    "PID": {
+      "IAE": 98.17879378622273,
+      "ISE": 51.38782240661822,
+      "ITAE": 8817.568406652044,
+      "overshoot_C": 0.0,
+      "settling_s": null,
+      "rise_90_s": null,
+      "final_error_C": 0.04573100143859676,
+      "valve_travel": 0.0999885238711376
+    }
+  },
+  "normal_noise_false_alarm": {
+    "seeds": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "noise_std_C": 0.2,
+    "alarm_sample_fractions": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "runs_with_alarm": 0
+  },
+  "configuration": {
+    "plant": {
+      "rho": 1000.0,
+      "cp": 4180.0,
+      "vc": 0.001,
+      "vh": 0.001,
+      "ua": 350.0,
+      "tc_in": 30.0,
+      "th_in": 80.0,
+      "mc": 0.03,
+      "mh_min": 0.01,
+      "mh_max": 0.1,
+      "valve_tau": 4.0
+    },
+    "sample_time_s": 1.0,
+    "seed": 42,
+    "fault_time_s": 300.0,
+    "alarm_threshold_C": 1.0,
+    "alarm_persistence_samples": 3,
+    "training_valve_step": [
+      0.4,
+      0.5
+    ],
+    "validation_valve_step": [
+      0.4,
+      0.3
+    ]
+  },
+  "solver_grid_max_difference_C": 5.973966210603976e-09
+}
